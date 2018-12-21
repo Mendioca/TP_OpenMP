@@ -1,0 +1,8 @@
+exec
+*.cmake
+CMakeCache.txt
+CMakeFiles
+Makefile
+*.cbp
+
+.idea
