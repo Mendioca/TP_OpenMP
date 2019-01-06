@@ -8,34 +8,25 @@
 #include "Timer.h"
 #include "Algorithms.h"
 
-static const int N_LETTERS = 'z' - 'a' + 1;
-
-bool isEqual(const int* count1, const int* count2) {
+bool isEqual(const int *count1, const int *count2) {
     for (int i = 0; i < N_LETTERS; ++i) {
-        if(count1[i] != count2[i])
+        if (count1[i] != count2[i])
             return false;
     }
     return true;
 }
 
-void setCount(int* count) {
-    for (int i = 0; i < N_LETTERS; ++i) {
-        count[i] = 0;
-    }
-}
-
-void printResult(const int* count) {
+void printResult(const int *count) {
     int disp_count = 0;
     for (int i = 0; i < N_LETTERS; ++i) {
-        if(count[i] > 0) {
+        if (count[i] > 0) {
             disp_count++;
             std::cout << (char) (i + 'a') << ":" << count[i];
 
-            if(disp_count == 4) {
+            if (disp_count == 4) {
                 std::cout << std::endl;
                 disp_count = 0;
-            }
-            else
+            } else
                 std::cout << " | ";
         }
     }
@@ -50,7 +41,7 @@ int main(int argc, char *argv[]) {
         return 0;
     }
 
-    if(argc > 3) {
+    if (argc > 3) {
         srand(atoi(argv[3]));
     }
 
@@ -64,27 +55,41 @@ int main(int argc, char *argv[]) {
 //    Utils::printMatrix<char>(size, size, matrix);
 
     int count[N_LETTERS];
-    setCount(count);
+    CharMatrixHandling::setCount(count);
     Timer::start();
     CharMatrixHandling::countLetters_S(size, count, matrix);
     long time_span = Timer::stop();
 
     int countParallel[N_LETTERS];
-    setCount(countParallel);
+    CharMatrixHandling::setCount(countParallel);
     Timer::start();
     CharMatrixHandling::countLetters_P(size, countParallel, matrix);
     long time_span_parallel = Timer::stop();
 
+    int countParallel_2[N_LETTERS];
+    CharMatrixHandling::setCount(countParallel_2);
+    Timer::start();
+    CharMatrixHandling::countLetterByVector_P(size, countParallel_2, matrix);
+    long time_span_parallel_2 = Timer::stop();
+
 //    printResult(count);
 //    std::cout << std::endl;
 //    printResult(countParallel);
+//    std::cout << std::endl;
+//    printResult(countParallel_2);
 
-    if(isEqual(count, countParallel)) {
-        std::cout << "Results are corrects" << std::endl;
-        std::cout << "seq time = " << time_span << "ms | par time = " << time_span_parallel << "ms" << std::endl;
-    }
-    else
-        std::cout << "Results are NOT corrects" << std::endl;
+    std::cout << "seq time = " << time_span << "ms" << std::endl;
+    if (isEqual(count, countParallel)) {
+        std::cout << "Results using parallelism are correct" << std::endl;
+        std::cout << "par time = " << time_span_parallel << "ms" << std::endl;
+    } else
+        std::cout << "Results using parallelism are NOT correct" << std::endl;
+
+    if (isEqual(count, countParallel_2)) {
+        std::cout << "Results using parallelism2 are correct" << std::endl;
+        std::cout << "par2 time = " << time_span_parallel_2 << "ms" << std::endl;
+    } else
+        std::cout << "Results using parallelism2 are NOT correct" << std::endl;
 
     return 0;
 }
