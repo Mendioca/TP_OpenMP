@@ -111,7 +111,6 @@ namespace VectorHandling {
         for (int i = 0; i < size; i++) {
             sum += vector[i];
         }
-
         return sum;
     }
 
@@ -127,6 +126,14 @@ namespace VectorHandling {
         }
     }
 
+    double scalar_product_S(int size, double *v1, double *v2) {
+        double partial_sum = 0;
+        for (int i = 0; i < size; ++i) {
+            partial_sum += v1[i] + v2[i];
+        }
+        return partial_sum;
+    }
+
     double autoAdd_P(int size, const double *vector) {
         double sum = 0;
 
@@ -134,7 +141,6 @@ namespace VectorHandling {
         for (int i = 0; i < size; i++) {
             sum += vector[i];
         }
-
         return sum;
     }
 
@@ -150,6 +156,15 @@ namespace VectorHandling {
         for (int i = 0; i < size; i++) {
             v[i] = number * v1[i];
         }
+    }
+
+    double scalar_product_P(int size, double *v1, double *v2) {
+        double partial_sum = 0;
+#pragma omp parallel for reduction(+:partial_sum)
+        for (int i = 0; i < size; ++i) {
+            partial_sum += v1[i] + v2[i];
+        }
+        return partial_sum;
     }
 }
 
