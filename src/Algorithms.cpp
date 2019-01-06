@@ -21,13 +21,90 @@ namespace CharMatrixHandling {
     }
 }
 
-namespace VectorHandling {
-    void add_S(int size, double *v, const double *v1, const double *v2) {
-        for (int i = 0; i < size; i++) {
-            v[i] = v1[i] + v2[i];
+namespace MatrixHandling {
+    double autoAddMatrix_S(int size_x, int size_y, const double **mi) {
+        double sum = 0;
+        for (int i = 0; i < size_x; i++) {
+            for (int j = 0; j < size_y; j++) {
+                sum += mi[i][j];
+            }
+        }
+        return sum;
+    }
+
+    void addMatrices_S(int size_x, int size_y, double **mr, const double **m1, const double **m2) {
+        for (int i = 0; i < size_x; i++) {
+            for (int j = 0; j < size_y; j++) {
+                mr[i][j] = m1[i][j] + m2[i][j];
+            }
         }
     }
 
+    void multMatriceNumber_S(int size_x, int size_y, double **mr, const double **mi, double number) {
+        for (int i = 0; i < size_x; i++) {
+            for (int j = 0; j < size_y; j++) {
+                mr[i][j] = mi[i][j] * number;
+            }
+        }
+    }
+
+    void multMatrices_S(int size_x1, int size_x2, int size_y1, double **mr, double **m1, double **m2) {
+        for (int col = 0; col < size_x2; ++col) {
+            for (int row = 0; row < size_y1; ++row) {
+                double partial_sum = 0;
+                for (int i = 0; i < size_x1; ++i) {
+                    partial_sum += m1[row][i] * m2[i][col];
+                }
+                mr[row][col] = partial_sum;
+            }
+        }
+    }
+
+    double autoAddMatrix_P(int size_x, int size_y, const double **mi) {
+        double sum = 0;
+#pragma omp parallel for collapse(2) reduction(+:sum)
+        for (int i = 0; i < size_x; i++) {
+            for (int j = 0; j < size_y; j++) {
+                sum += mi[i][j];
+            }
+        }
+        return sum;
+    }
+
+    void addMatrices_P(int size_x, int size_y, double **mr, const double **m1, const double **m2) {
+#pragma omp parallel for collapse(2)
+        for (int i = 0; i < size_x; i++) {
+            for (int j = 0; j < size_y; j++) {
+                mr[i][j] = m1[i][j] + m2[i][j];
+            }
+        }
+    }
+
+    void multMatriceNumber_P(int size_x, int size_y, double **mr, const double **mi, double number) {
+#pragma omp parallel for collapse(2)
+        for (int i = 0; i < size_x; i++) {
+            for (int j = 0; j < size_y; j++) {
+                mr[i][j] = mi[i][j] * number;
+            }
+        }
+    }
+
+    void multMatrices_P(int size_x1, int size_x2, int size_y1, double **mr, double **m1, double **m2) {
+#pragma omp parallel for collapse(2)
+        for (int col = 0; col < size_x2; ++col) {
+            for (int row = 0; row < size_y1; ++row) {
+                double partial_sum = 0;
+#pragma omp parallel for reduction(+:partial_sum)
+                for (int i = 0; i < size_x1; ++i) {
+                    partial_sum += m1[row][i] * m2[i][col];
+                }
+                mr[row][col] = partial_sum;
+            }
+        }
+    }
+}
+
+namespace VectorHandling {
     double autoAdd_S(int size, const double *vector) {
         double sum = 0;
 
@@ -38,16 +115,15 @@ namespace VectorHandling {
         return sum;
     }
 
-    void mult_S(int size, double *v, const double *v1, double number) {
+    void addVectors_S(int size, double *v, const double *v1, const double *v2) {
         for (int i = 0; i < size; i++) {
-            v[i] = number * v1[i];
+            v[i] = v1[i] + v2[i];
         }
     }
 
-    void add_P(int size, double *v, const double *v1, const double *v2) {
-#pragma omp parallel for
+    void multVectorByNumber_S(int size, double *v, const double *v1, double number) {
         for (int i = 0; i < size; i++) {
-            v[i] = v1[i] + v2[i];
+            v[i] = number * v1[i];
         }
     }
 
@@ -62,7 +138,14 @@ namespace VectorHandling {
         return sum;
     }
 
-    void mult_P(int size, double *v, const double *v1, double number) {
+    void addVectors_P(int size, double *v, const double *v1, const double *v2) {
+#pragma omp parallel for
+        for (int i = 0; i < size; i++) {
+            v[i] = v1[i] + v2[i];
+        }
+    }
+
+    void multVectorByNumber_P(int size, double *v, const double *v1, double number) {
 #pragma omp parallel for
         for (int i = 0; i < size; i++) {
             v[i] = number * v1[i];

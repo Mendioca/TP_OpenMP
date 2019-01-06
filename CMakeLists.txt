@@ -9,9 +9,7 @@ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS} -DOMP_USE")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS} -DOMP_USE")
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${OpenMP_EXE_LINKER_FLAGS}")
 
-
 set(SRC
-        src/charMatrix.cpp
         src/Algorithms.cpp
         src/Timer.cpp)
 
@@ -20,4 +18,5 @@ set(HEADERS
         src/Timer.h
         src/Utils.h)
 
-add_executable(exec ${SRC} ${HEADERS})
+add_executable(exec_char src/charMatrix.cpp ${SRC} ${HEADERS})
+add_executable(exec_numb src/numberMatrix.cpp ${SRC} ${HEADERS})

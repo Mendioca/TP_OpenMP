@@ -8,8 +8,6 @@
 #include "Timer.h"
 #include "Algorithms.h"
 
-#define DEFAULT_SEED 1337
-
 static const int N_LETTERS = 'z' - 'a' + 1;
 
 bool isEqual(const int* count1, const int* count2) {
