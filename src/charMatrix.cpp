@@ -60,11 +60,24 @@ int main(int argc, char *argv[]) {
     CharMatrixHandling::countLetters_S(size, count, matrix);
     long time_span = Timer::stop();
 
-    int countParallel[N_LETTERS];
-    CharMatrixHandling::setCount(countParallel);
-    Timer::start();
-    CharMatrixHandling::countLetters_P(size, countParallel, matrix);
-    long time_span_parallel = Timer::stop();
+    for (int i = 0; i < size; ++i) {
+        delete[] matrix[i];
+    }
+    delete[] matrix;
+
+//    int countParallel[N_LETTERS];
+//    CharMatrixHandling::setCount(countParallel);
+//    Timer::start();
+//    CharMatrixHandling::countLetters_P(size, countParallel, matrix);
+//    long time_span_parallel = Timer::stop();
+
+    srand(DEFAULT_SEED);
+    if (argc > 3) {
+        srand(atoi(argv[3]));
+    }
+
+    matrix = Utils::mallocSquareMatrix<char>(size);
+    Utils::generateSquareMatrix(size, matrix);
 
     int countParallel_2[N_LETTERS];
     CharMatrixHandling::setCount(countParallel_2);
@@ -78,18 +91,22 @@ int main(int argc, char *argv[]) {
 //    std::cout << std::endl;
 //    printResult(countParallel_2);
 
-    std::cout << "seq time = " << time_span << "ms" << std::endl;
-    if (isEqual(count, countParallel)) {
-        std::cout << "Results using parallelism are correct" << std::endl;
-        std::cout << "par time = " << time_span_parallel << "ms" << std::endl;
-    } else
-        std::cout << "Results using parallelism are NOT correct" << std::endl;
+    std::cout << "seq time = " << time_span << "µs" << std::endl;
+//    if (isEqual(count, countParallel)) {
+//        std::cout << "Results using parallelism are correct" << std::endl;
+//        std::cout << "par time = " << time_span_parallel << "ms" << std::endl;
+//    } else
+//        std::cout << "Results using parallelism are NOT correct" << std::endl;
 
     if (isEqual(count, countParallel_2)) {
         std::cout << "Results using parallelism2 are correct" << std::endl;
-        std::cout << "par2 time = " << time_span_parallel_2 << "ms" << std::endl;
-    } else
+        std::cout << "par2 time = " << time_span_parallel_2 << "µs" << std::endl;
+    } else {
         std::cout << "Results using parallelism2 are NOT correct" << std::endl;
+        printResult(count);
+        std::cout << std::endl;
+        printResult(countParallel_2);
+    }
 
     return 0;
 }

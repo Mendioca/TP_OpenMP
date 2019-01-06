@@ -46,14 +46,11 @@ namespace CharMatrixHandling {
                 countInVector(size, private_count[omp_get_thread_num()], matrix[i]);
             }
 
-#pragma omp for
+#pragma omp for collapse(2)
             for (int i = 0; i < N_LETTERS; ++i) {
-                int oneLetterCount = 0;
-#pragma omp parallel for reduction(+:oneLetterCount)
                 for (int j = 0; j < omp_get_max_threads(); ++j) {
-                    oneLetterCount += private_count[j][i];
+                    count[i] += private_count[j][i];
                 }
-                count[i] = oneLetterCount;
             }
         }
     }
