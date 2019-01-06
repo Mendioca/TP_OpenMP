@@ -129,7 +129,7 @@ namespace VectorHandling {
     double scalar_product_S(int size, double *v1, double *v2) {
         double partial_sum = 0;
         for (int i = 0; i < size; ++i) {
-            partial_sum += v1[i] + v2[i];
+            partial_sum += v1[i] * v2[i];
         }
         return partial_sum;
     }
@@ -162,7 +162,7 @@ namespace VectorHandling {
         double partial_sum = 0;
 #pragma omp parallel for reduction(+:partial_sum)
         for (int i = 0; i < size; ++i) {
-            partial_sum += v1[i] + v2[i];
+            partial_sum += v1[i] * v2[i];
         }
         return partial_sum;
     }

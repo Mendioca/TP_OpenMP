@@ -1,4 +1,4 @@
-exec
+exec*
 *.cmake
 CMakeCache.txt
 CMakeFiles
