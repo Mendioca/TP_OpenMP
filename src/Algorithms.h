@@ -3,7 +3,7 @@
 #define N_LETTERS 26
 
 namespace CharMatrixHandling {
-    void setCount(int* count);
+    // void setCount(int* count);
 
     void countLetters_S(int size, int *count, char **matrix);
 

@@ -55,7 +55,6 @@ int main(int argc, char *argv[]) {
 //    Utils::printMatrix<char>(size, size, matrix);
 
     int count[N_LETTERS];
-    CharMatrixHandling::setCount(count);
     Timer::start();
     CharMatrixHandling::countLetters_S(size, count, matrix);
     long time_span = Timer::stop();
@@ -74,7 +73,6 @@ int main(int argc, char *argv[]) {
     Utils::generateSquareMatrix(size, matrix);
 
     int countParallel[N_LETTERS];
-    CharMatrixHandling::setCount(countParallel);
     Timer::start();
     CharMatrixHandling::countLetters_P(size, countParallel, matrix);
     long time_span_parallel = Timer::stop();
@@ -93,7 +91,6 @@ int main(int argc, char *argv[]) {
     Utils::generateSquareMatrix(size, matrix);
 
     int countParallel_2[N_LETTERS];
-    CharMatrixHandling::setCount(countParallel_2);
     Timer::start();
     CharMatrixHandling::countLetterByVector_P(size, countParallel_2, matrix);
     long time_span_parallel_2 = Timer::stop();
