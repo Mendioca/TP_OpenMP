@@ -98,10 +98,10 @@ int main(int argc, char *argv[]) {
     std::cout << "seq time = " << time_span << "µs" << std::endl;
 
     if (isEqual(count, countParallel_naive)) {
-        std::cout << "Results using parallelism are correct" << std::endl;
-        std::cout << "par time = " << time_span_parallel_naive << "µs" << std::endl;
+        std::cout << "Results using naive parallelism are correct" << std::endl;
+        std::cout << "naive par time = " << time_span_parallel_naive << "µs" << std::endl;
     } else {
-        std::cout << "Results using parallelism are NOT correct" << std::endl;
+        std::cout << "Results using naive parallelism are NOT correct" << std::endl;
         printResult(count);
         std::cout << std::endl;
         printResult(countParallel_naive);
@@ -109,10 +109,10 @@ int main(int argc, char *argv[]) {
     }
 
     if (isEqual(count, countParallel_smart)) {
-        std::cout << "Results using parallelism2 are correct" << std::endl;
-        std::cout << "par2 time = " << time_span_parallel_smart << "µs" << std::endl;
+        std::cout << "Results using smart parallelism are correct" << std::endl;
+        std::cout << "smart par time = " << time_span_parallel_smart << "µs" << std::endl;
     } else {
-        std::cout << "Results using parallelism2 are NOT correct" << std::endl;
+        std::cout << "Results using smart parallelism are NOT correct" << std::endl;
         printResult(count);
         std::cout << std::endl;
         printResult(countParallel_smart);
@@ -120,10 +120,10 @@ int main(int argc, char *argv[]) {
     }
 
     if (isEqual(count, countParallel_task)) {
-        std::cout << "Results using parallelism2 are correct" << std::endl;
-        std::cout << "par2 time = " << time_span_parallel_task << "µs" << std::endl;
+        std::cout << "Results using task parallelism are correct" << std::endl;
+        std::cout << "task par time = " << time_span_parallel_task << "µs" << std::endl;
     } else {
-        std::cout << "Results using parallelism2 are NOT correct" << std::endl;
+        std::cout << "Results using task parallelism are NOT correct" << std::endl;
         printResult(count);
         std::cout << std::endl;
         printResult(countParallel_task);

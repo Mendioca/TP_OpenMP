@@ -57,10 +57,7 @@ namespace CharMatrixHandling {
         {
 #pragma omp single
             {
-#pragma omp task
                 setCount_S(count);
-
-#pragma omp taskwait
                 long private_count[N_LETTERS];
                 for (int r = 0; r < size; ++r) {
 #pragma omp task private(private_count)
