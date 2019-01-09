@@ -29,28 +29,15 @@ namespace CharMatrixHandling {
 
     static void countInVector(int size, int *count, const char *vector) {
         for (int i = 0; i < size; ++i) {
+#pragma omp atomic
             count[vector[i] - 'a']++;
         }
     }
 
     void countLetterByVector_P(int size, int *count, char **matrix) {
-        int private_count[omp_get_max_threads()][N_LETTERS];
-
-#pragma omp parallel
-        {
-            setCount(private_count[omp_get_thread_num()]);
-#pragma omp barrier
-#pragma omp for
-            for (int i = 0; i < size; ++i) {
-                countInVector(size, private_count[omp_get_thread_num()], matrix[i]);
-            }
-
-#pragma omp for collapse(2)
-            for (int i = 0; i < N_LETTERS; ++i) {
-                for (int j = 0; j < omp_get_max_threads(); ++j) {
-                    count[i] += private_count[j][i];
-                }
-            }
+#pragma omp parallel for
+        for (int r = 0; r < size; ++r) {
+            countInVector(size, count, matrix[r]);
         }
     }
 }
