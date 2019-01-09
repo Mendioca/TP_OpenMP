@@ -5,13 +5,13 @@
 namespace CharMatrixHandling {
     // void setCount(int* count);
 
-    void countLetters_S(int size, int *count, char **matrix);
+    void countLetters_S(int size, long *count, char **matrix);
 
-    void countLetters_P(int size, int *count, char **matrix);
+    void countLetters_P(int size, long *count, char **matrix);
 
-    void countLetterByVector_P(int size, int *count, char **matrix);
+    void countLetterByVector_P(int size, long *count, char **matrix);
 
-    void countLetterTask_P(int size, int *count, char **matrix);
+    void countLetterTask_P(int size, long *count, char **matrix);
 }
 
 namespace MatrixHandling {

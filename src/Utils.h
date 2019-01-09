@@ -19,10 +19,10 @@ public:
     template<typename T>
     static T **mallocSquareMatrix(int size);
 
-    template <typename T>
+    template<typename T>
     static T generateNumber();
 
-    template <typename T>
+    template<typename T>
     static T generateNumber(int min, int max);
 
     template<typename T>
@@ -51,7 +51,7 @@ static int randInt(int min, int max) {
 }
 
 static char randLowerChar() {
-    return (char) randInt((int) 'a', (int) 'z');
+    return (char) randInt((int) 'a', ((int) 'z') + 1);
 }
 
 template<typename T>

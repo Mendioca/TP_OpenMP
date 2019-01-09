@@ -8,7 +8,7 @@
 #include "Timer.h"
 #include "Algorithms.h"
 
-bool isEqual(const int *count1, const int *count2) {
+bool isEqual(const long *count1, const long *count2) {
     for (int i = 0; i < N_LETTERS; ++i) {
         if (count1[i] != count2[i])
             return false;
@@ -16,7 +16,7 @@ bool isEqual(const int *count1, const int *count2) {
     return true;
 }
 
-void printResult(const int *count) {
+void printResult(const long *count) {
     int disp_count = 0;
     for (int i = 0; i < N_LETTERS; ++i) {
         if (count[i] > 0) {
@@ -54,7 +54,7 @@ int main(int argc, char *argv[]) {
 
 //    Utils::printMatrix<char>(size, size, matrix);
 
-    int count[N_LETTERS];
+    long count[N_LETTERS];
     Timer::start();
     CharMatrixHandling::countLetters_S(size, count, matrix);
     long time_span = Timer::stop();
@@ -72,7 +72,7 @@ int main(int argc, char *argv[]) {
     matrix = Utils::mallocSquareMatrix<char>(size);
     Utils::generateSquareMatrix(size, matrix);
 
-    int countParallel[N_LETTERS];
+    long countParallel[N_LETTERS];
     Timer::start();
     CharMatrixHandling::countLetters_P(size, countParallel, matrix);
     long time_span_parallel = Timer::stop();
@@ -90,7 +90,7 @@ int main(int argc, char *argv[]) {
     matrix = Utils::mallocSquareMatrix<char>(size);
     Utils::generateSquareMatrix(size, matrix);
 
-    int countParallel_2[N_LETTERS];
+    long countParallel_2[N_LETTERS];
     Timer::start();
     CharMatrixHandling::countLetterByVector_P(size, countParallel_2, matrix);
     long time_span_parallel_2 = Timer::stop();

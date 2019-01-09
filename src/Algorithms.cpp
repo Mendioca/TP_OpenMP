@@ -1,17 +1,16 @@
-#include <omp.h>
 #include "Algorithms.h"
 
 namespace CharMatrixHandling {
-    static void setCount_S(int *count) {
+    static void setCount_S(long *count) {
         for (int i = 0; i < N_LETTERS; ++i) count[i] = 0;
     }
 
-    static void setCount_P(int *count) {
+    static void setCount_P(long *count) {
 #pragma omp parallel for
         for (int i = 0; i < N_LETTERS; ++i) count[i] = 0;
     }
 
-    void countLetters_S(int size, int *count, char **matrix) {
+    void countLetters_S(int size, long *count, char **matrix) {
         setCount_S(count);
         for (int r = 0; r < size; ++r) {
             for (int c = 0; c < size; ++c) {
@@ -20,8 +19,8 @@ namespace CharMatrixHandling {
         }
     }
 
-    void countLetters_P(int size, int *count, char **matrix) {
-        setCount_P(count);
+    void countLetters_P(int size, long *count, char **matrix) {
+        setCount_S(count);
 #pragma omp parallel for collapse(2)
         for (int r = 0; r < size; ++r) {
             for (int c = 0; c < size; ++c) {
@@ -32,18 +31,24 @@ namespace CharMatrixHandling {
         }
     }
 
-    static void countInVector(int size, int *count, const char *vector) {
+    static void countInVector(int size, long *count, const char *vector) {
+        setCount_S(count);
         for (int i = 0; i < size; ++i) {
-#pragma omp atomic
             ++count[vector[i] - 'a'];
         }
     }
 
-    void countLetterByVector_P(int size, int *count, char **matrix) {
-        setCount_P(count);
+    void countLetterByVector_P(int size, long *count, char **matrix) {
+        setCount_S(count);
+
 #pragma omp parallel for
         for (int r = 0; r < size; ++r) {
-            countInVector(size, count, matrix[r]);
+            long private_count[N_LETTERS];
+            countInVector(size, private_count, matrix[r]);
+            for (int i = 0; i < N_LETTERS; ++i) {
+#pragma omp atomic
+                count[i] += private_count[i];
+            }
         }
     }
 }
