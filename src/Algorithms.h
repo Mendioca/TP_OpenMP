@@ -10,6 +10,8 @@ namespace CharMatrixHandling {
     void countLetters_P(int size, int *count, char **matrix);
 
     void countLetterByVector_P(int size, int *count, char **matrix);
+
+    void countLetterTask_P(int size, int *count, char **matrix);
 }
 
 namespace MatrixHandling {
