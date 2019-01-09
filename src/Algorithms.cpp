@@ -38,7 +38,7 @@ namespace CharMatrixHandling {
         }
     }
 
-    void countLetterByVector_P(int size, long *count, char **matrix) {
+    void countLettersByVector_P(int size, long *count, char **matrix) {
         setCount_S(count);
 
 #pragma omp parallel for
@@ -48,6 +48,31 @@ namespace CharMatrixHandling {
             for (int i = 0; i < N_LETTERS; ++i) {
 #pragma omp atomic
                 count[i] += private_count[i];
+            }
+        }
+    }
+
+    void countLettersTask_P(int size, long *count, char **matrix) {
+#pragma omp parallel
+        {
+#pragma omp single
+            {
+#pragma omp task
+                setCount_S(count);
+
+#pragma omp taskwait
+                long private_count[N_LETTERS];
+                for (int r = 0; r < size; ++r) {
+#pragma omp task private(private_count)
+                    {
+                        countInVector(size, private_count, matrix[r]);
+
+                        for (int i = 0; i < N_LETTERS; ++i) {
+#pragma omp atomic
+                            count[i] += private_count[i];
+                        }
+                    }
+                }
             }
         }
     }

@@ -6,3 +6,6 @@ Makefile
 *.cbp
 
 .idea
+
+build
+cmake-build-debug

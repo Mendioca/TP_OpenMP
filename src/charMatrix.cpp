@@ -8,6 +8,19 @@
 #include "Timer.h"
 #include "Algorithms.h"
 
+void init_matrix(int size, char **&matrix, unsigned int seed) {
+    if (matrix) {
+        for (int i = 0; i < size; ++i)
+            if(matrix[i]) delete[] matrix[i];
+        delete[] matrix;
+    }
+
+    srand(seed);
+
+    matrix = Utils::mallocSquareMatrix<char>(size);
+    Utils::generateSquareMatrix(size, matrix);
+}
+
 bool isEqual(const long *count1, const long *count2) {
     for (int i = 0; i < N_LETTERS; ++i) {
         if (count1[i] != count2[i])
@@ -41,86 +54,79 @@ int main(int argc, char *argv[]) {
         return 0;
     }
 
-    if (argc > 3) {
-        srand(atoi(argv[3]));
-    }
+    unsigned int seed;
+
+    argc > 3
+    ? seed = atoi(argv[3])
+    : seed = DEFAULT_SEED;
 
     int size = atoi(argv[2]);
     int num_threads = atoi(argv[1]);
     omp_set_num_threads(num_threads);
 
-    auto **matrix = Utils::mallocSquareMatrix<char>(size);
-    Utils::generateSquareMatrix(size, matrix);
+    char **matrix = nullptr;
 
-//    Utils::printMatrix<char>(size, size, matrix);
+    init_matrix(size, matrix, seed);
 
     long count[N_LETTERS];
     Timer::start();
     CharMatrixHandling::countLetters_S(size, count, matrix);
     long time_span = Timer::stop();
 
-    for (int i = 0; i < size; ++i) {
-        delete[] matrix[i];
-    }
-    delete[] matrix;
+    init_matrix(size, matrix, seed);
 
-    srand(DEFAULT_SEED);
-    if (argc > 3) {
-        srand(atoi(argv[3]));
-    }
-
-    matrix = Utils::mallocSquareMatrix<char>(size);
-    Utils::generateSquareMatrix(size, matrix);
-
-    long countParallel[N_LETTERS];
+    long countParallel_naive[N_LETTERS];
     Timer::start();
-    CharMatrixHandling::countLetters_P(size, countParallel, matrix);
-    long time_span_parallel = Timer::stop();
+    CharMatrixHandling::countLetters_P(size, countParallel_naive, matrix);
+    long time_span_parallel_naive = Timer::stop();
 
-    for (int i = 0; i < size; ++i) {
-        delete[] matrix[i];
-    }
-    delete[] matrix;
+    init_matrix(size, matrix, seed);
 
-    srand(DEFAULT_SEED);
-    if (argc > 3) {
-        srand(atoi(argv[3]));
-    }
-
-    matrix = Utils::mallocSquareMatrix<char>(size);
-    Utils::generateSquareMatrix(size, matrix);
-
-    long countParallel_2[N_LETTERS];
+    long countParallel_smart[N_LETTERS];
     Timer::start();
-    CharMatrixHandling::countLetterByVector_P(size, countParallel_2, matrix);
-    long time_span_parallel_2 = Timer::stop();
+    CharMatrixHandling::countLettersByVector_P(size, countParallel_smart, matrix);
+    long time_span_parallel_smart = Timer::stop();
 
-//    printResult(count);
-//    std::cout << std::endl;
-//    printResult(countParallel);
-//    std::cout << std::endl;
-//    printResult(countParallel_2);
+    init_matrix(size, matrix, seed);
+
+    long countParallel_task[N_LETTERS];
+    Timer::start();
+    CharMatrixHandling::countLettersTask_P(size, countParallel_task, matrix);
+    long time_span_parallel_task = Timer::stop();
+
 
     std::cout << "seq time = " << time_span << "µs" << std::endl;
-    if (isEqual(count, countParallel)) {
+
+    if (isEqual(count, countParallel_naive)) {
         std::cout << "Results using parallelism are correct" << std::endl;
-        std::cout << "par time = " << time_span_parallel << "ms" << std::endl;
+        std::cout << "par time = " << time_span_parallel_naive << "µs" << std::endl;
     } else {
         std::cout << "Results using parallelism are NOT correct" << std::endl;
         printResult(count);
         std::cout << std::endl;
-        printResult(countParallel);
+        printResult(countParallel_naive);
         std::cout << "=========================================" << std::endl;
     }
 
-    if (isEqual(count, countParallel_2)) {
+    if (isEqual(count, countParallel_smart)) {
         std::cout << "Results using parallelism2 are correct" << std::endl;
-        std::cout << "par2 time = " << time_span_parallel_2 << "µs" << std::endl;
+        std::cout << "par2 time = " << time_span_parallel_smart << "µs" << std::endl;
     } else {
         std::cout << "Results using parallelism2 are NOT correct" << std::endl;
         printResult(count);
         std::cout << std::endl;
-        printResult(countParallel_2);
+        printResult(countParallel_smart);
+        std::cout << "=========================================" << std::endl;
+    }
+
+    if (isEqual(count, countParallel_task)) {
+        std::cout << "Results using parallelism2 are correct" << std::endl;
+        std::cout << "par2 time = " << time_span_parallel_task << "µs" << std::endl;
+    } else {
+        std::cout << "Results using parallelism2 are NOT correct" << std::endl;
+        printResult(count);
+        std::cout << std::endl;
+        printResult(countParallel_task);
         std::cout << "=========================================" << std::endl;
     }
 
