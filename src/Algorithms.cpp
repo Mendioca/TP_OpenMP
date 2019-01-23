@@ -76,7 +76,7 @@ namespace CharMatrixHandling {
 }
 
 namespace MatrixHandling {
-    double autoAddMatrix_S(int size_x, int size_y, const double **mi) {
+    double autoAddMatrix_S(int size_x, int size_y, double **mi) {
         double sum = 0;
         for (int i = 0; i < size_x; i++) {
             for (int j = 0; j < size_y; j++) {
@@ -86,7 +86,7 @@ namespace MatrixHandling {
         return sum;
     }
 
-    void addMatrices_S(int size_x, int size_y, double **mr, const double **m1, const double **m2) {
+    void addMatrices_S(int size_x, int size_y, double **mr, double **m1, double **m2) {
         for (int i = 0; i < size_x; i++) {
             for (int j = 0; j < size_y; j++) {
                 mr[i][j] = m1[i][j] + m2[i][j];
@@ -94,7 +94,7 @@ namespace MatrixHandling {
         }
     }
 
-    void multMatriceNumber_S(int size_x, int size_y, double **mr, const double **mi, double number) {
+    void multMatrixNumber_S(int size_x, int size_y, double **mr, double **mi, double number) {
         for (int i = 0; i < size_x; i++) {
             for (int j = 0; j < size_y; j++) {
                 mr[i][j] = mi[i][j] * number;
@@ -114,7 +114,7 @@ namespace MatrixHandling {
         }
     }
 
-    double autoAddMatrix_P(int size_x, int size_y, const double **mi) {
+    double autoAddMatrix_P(int size_x, int size_y, double **mi) {
         double sum = 0;
 #pragma omp parallel for collapse(2) reduction(+:sum)
         for (int i = 0; i < size_x; i++) {
@@ -125,7 +125,7 @@ namespace MatrixHandling {
         return sum;
     }
 
-    void addMatrices_P(int size_x, int size_y, double **mr, const double **m1, const double **m2) {
+    void addMatrices_P(int size_x, int size_y, double **mr, double **m1, double **m2) {
 #pragma omp parallel for collapse(2)
         for (int i = 0; i < size_x; i++) {
             for (int j = 0; j < size_y; j++) {
@@ -134,7 +134,7 @@ namespace MatrixHandling {
         }
     }
 
-    void multMatriceNumber_P(int size_x, int size_y, double **mr, const double **mi, double number) {
+    void multMatrixNumber_P(int size_x, int size_y, double **mr, double **mi, double number) {
 #pragma omp parallel for collapse(2)
         for (int i = 0; i < size_x; i++) {
             for (int j = 0; j < size_y; j++) {
@@ -159,7 +159,7 @@ namespace MatrixHandling {
 }
 
 namespace VectorHandling {
-    double autoAdd_S(int size, const double *vector) {
+    double autoAdd_S(int size, double *vector) {
         double sum = 0;
 
         for (int i = 0; i < size; i++) {
@@ -168,13 +168,13 @@ namespace VectorHandling {
         return sum;
     }
 
-    void addVectors_S(int size, double *v, const double *v1, const double *v2) {
+    void addVectors_S(int size, double *v, double *v1, double *v2) {
         for (int i = 0; i < size; i++) {
             v[i] = v1[i] + v2[i];
         }
     }
 
-    void multVectorByNumber_S(int size, double *v, const double *v1, double number) {
+    void multVectorByNumber_S(int size, double *v, double *v1, double number) {
         for (int i = 0; i < size; i++) {
             v[i] = number * v1[i];
         }
@@ -188,7 +188,7 @@ namespace VectorHandling {
         return partial_sum;
     }
 
-    double autoAdd_P(int size, const double *vector) {
+    double autoAdd_P(int size, double *vector) {
         double sum = 0;
 
 #pragma omp parallel for reduction(+:sum)
@@ -198,14 +198,14 @@ namespace VectorHandling {
         return sum;
     }
 
-    void addVectors_P(int size, double *v, const double *v1, const double *v2) {
+    void addVectors_P(int size, double *v, double *v1, double *v2) {
 #pragma omp parallel for
         for (int i = 0; i < size; i++) {
             v[i] = v1[i] + v2[i];
         }
     }
 
-    void multVectorByNumber_P(int size, double *v, const double *v1, double number) {
+    void multVectorByNumber_P(int size, double *v, double *v1, double number) {
 #pragma omp parallel for
         for (int i = 0; i < size; i++) {
             v[i] = number * v1[i];
@@ -223,7 +223,7 @@ namespace VectorHandling {
 }
 
 namespace MatrixVectorHandling {
-    void matrixMultVect_S(int size_x, int size_y, double *vr, const double **mi, const double *vi) {
+    void matrixMultVect_S(int size_x, int size_y, double *vr, double **mi, double *vi) {
         for (int i = 0; i < size_x; i++) {
             double partial_sum = 0;
             for (int j = 0; j < size_y; j++) {
@@ -233,7 +233,7 @@ namespace MatrixVectorHandling {
         }
     }
 
-    void matrixMultVect_P(int size_x, int size_y, double *vr, const double **mi, const double *vi) {
+    void matrixMultVect_P(int size_x, int size_y, double *vr, double **mi, double *vi) {
 #pragma omp parallel for
         for (int i = 0; i < size_x; i++) {
             double partial_sum = 0;
