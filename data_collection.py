@@ -22,6 +22,8 @@ while current_size <= max_size:
         print("\texecuting program with " + str(current_num_threads) + " threads")
         out = subprocess.check_output([program_name, str(current_num_threads), str(current_size)])
         file.write(str(out, 'utf-8'))
+
+        # I choose these value because measure will be performed on 32 cores processors
         if current_num_threads == 1:
             current_num_threads += 1
         elif current_num_threads < 8:
