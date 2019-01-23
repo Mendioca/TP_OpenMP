@@ -29,26 +29,7 @@ bool isEqual(const long *count1, const long *count2) {
     return true;
 }
 
-void printResult(const long *count) {
-    int disp_count = 0;
-    for (int i = 0; i < N_LETTERS; ++i) {
-        if (count[i] > 0) {
-            disp_count++;
-            std::cout << (char) (i + 'a') << ":" << count[i];
-
-            if (disp_count == 4) {
-                std::cout << std::endl;
-                disp_count = 0;
-            } else
-                std::cout << " | ";
-        }
-    }
-    std::cout << std::endl;
-}
-
 int main(int argc, char *argv[]) {
-    srand(DEFAULT_SEED);
-
     if (argc < 3) {
         printf("Not enough args\n");
         return 0;
@@ -66,69 +47,56 @@ int main(int argc, char *argv[]) {
 
     char **matrix = nullptr;
 
+    // matrix is reallocated each time to prevent cashing mechanism
     init_matrix(size, matrix, seed);
 
     long count[N_LETTERS];
     Timer::start();
     CharMatrixHandling::countLetters_S(size, count, matrix);
-    long time_span = Timer::stop();
+    long time_span_seq = Timer::stop();
 
     init_matrix(size, matrix, seed);
 
-    long countParallel_naive[N_LETTERS];
+    long count_parallel_naive[N_LETTERS];
     Timer::start();
-    CharMatrixHandling::countLetters_P(size, countParallel_naive, matrix);
+    CharMatrixHandling::countLetters_P(size, count_parallel_naive, matrix);
     long time_span_parallel_naive = Timer::stop();
+    bool parallel_naive_true = isEqual(count, count_parallel_naive);
 
     init_matrix(size, matrix, seed);
 
-    long countParallel_smart[N_LETTERS];
+    long count_parallel_smart[N_LETTERS];
     Timer::start();
-    CharMatrixHandling::countLettersByVector_P(size, countParallel_smart, matrix);
+    CharMatrixHandling::countLettersByVector_P(size, count_parallel_smart, matrix);
     long time_span_parallel_smart = Timer::stop();
+    bool parallel_smart_true = isEqual(count, count_parallel_smart);
 
     init_matrix(size, matrix, seed);
 
-    long countParallel_task[N_LETTERS];
+    long count_parallel_task[N_LETTERS];
     Timer::start();
-    CharMatrixHandling::countLettersTask_P(size, countParallel_task, matrix);
+    CharMatrixHandling::countLettersTask_P(size, count_parallel_task, matrix);
     long time_span_parallel_task = Timer::stop();
+    bool parallel_task_true = isEqual(count, count_parallel_task);
 
+    std::cout << size << "," << num_threads << "," << time_span_seq << ",";
+    if (parallel_naive_true)
+        std::cout << time_span_parallel_naive;
+    else
+        std::cout << "N/A";
+    std::cout << ",";
 
-    std::cout << "seq time = " << time_span << "µs" << std::endl;
+    if (parallel_smart_true)
+        std::cout << time_span_parallel_smart;
+    else
+        std::cout << "N/A";
+    std::cout << ",";
 
-    if (isEqual(count, countParallel_naive)) {
-        std::cout << "Results using naive parallelism are correct" << std::endl;
-        std::cout << "naive par time = " << time_span_parallel_naive << "µs" << std::endl;
-    } else {
-        std::cout << "Results using naive parallelism are NOT correct" << std::endl;
-        printResult(count);
-        std::cout << std::endl;
-        printResult(countParallel_naive);
-        std::cout << "=========================================" << std::endl;
-    }
-
-    if (isEqual(count, countParallel_smart)) {
-        std::cout << "Results using smart parallelism are correct" << std::endl;
-        std::cout << "smart par time = " << time_span_parallel_smart << "µs" << std::endl;
-    } else {
-        std::cout << "Results using smart parallelism are NOT correct" << std::endl;
-        printResult(count);
-        std::cout << std::endl;
-        printResult(countParallel_smart);
-        std::cout << "=========================================" << std::endl;
-    }
-
-    if (isEqual(count, countParallel_task)) {
-        std::cout << "Results using task parallelism are correct" << std::endl;
-        std::cout << "task par time = " << time_span_parallel_task << "µs" << std::endl;
-    } else {
-        std::cout << "Results using task parallelism are NOT correct" << std::endl;
-        printResult(count);
-        std::cout << std::endl;
-        printResult(countParallel_task);
-        std::cout << "=========================================" << std::endl;
-    }
+    if (parallel_task_true)
+        std::cout << time_span_parallel_task;
+    else
+        std::cout << "N/A";
+    std::cout << std::endl;
 
     return 0;
 }
