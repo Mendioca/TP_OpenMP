@@ -128,16 +128,6 @@ int main(int argc, char *argv[]) {
         }
         multMatrices_time = (double) total_time / (double) NBR_ITER;
     }
-    double multMatrices_time_seq;
-    {
-        long total_time = 0;
-        for (int i = 0; i < NBR_ITER; ++i) {
-            Timer::start();
-            MatrixHandling::multMatrices_S(size, size, size, mr, m1, m2);
-            total_time += Timer::stop();
-        }
-        multMatrices_time_seq = (double) total_time / (double) NBR_ITER;
-    }
 
     ///MATRIX&VECTORS
     double matrixMultVector_time;
