@@ -15,15 +15,13 @@ else:
 
 current_size = 100
 
-print(max_size)
-
 while current_size <= max_size:
-    print(f"measuring with size {current_size}")
+    print("measuring with size " + str(current_size))
     current_num_threads = 1
     while current_num_threads <= max_threads:
-        print(f"\texecuting program with {current_num_threads} threads")
-        out = subprocess.check_output([program_name, str(current_num_threads), str(current_size)], encoding='utf-8')
-        file.write(out)
+        print("\texecuting program with " + str(current_num_threads) + " threads")
+        out = subprocess.check_output([program_name, str(current_num_threads), str(current_size)])
+        file.write(str(out, 'utf-8'))
         if current_num_threads == 1:
             current_num_threads += 1
         elif current_num_threads < 8:
