@@ -8,10 +8,12 @@ max_size = int(sys.argv[3])
 if "char" in program_name:
     file = open("results_char.csv", 'w')
     file.write("size,num_threads,seq_time,naive_parallel_time,smart_parallel_time,task_parallel_time\n")
+elif "vect" in program_name:
+    file = open('results_vect.csv', 'w')
+    file.write("size,num_threads,vec_autoAdd,addVectors,multVecByNum,scalarProduct\n")
 else:
-    file = open('results_num.csv', 'w')
-    file.write("size,num_threads,vec_autoAdd,addVectors,multVecByNum,scalarProduct,mat_autoAdd,addMatrices,"
-               "multMatByNum,multMatrices,matByVec\n")
+    file = open('results_matrix.csv', 'w')
+    file.write("size,num_threads,mat_autoAdd,addMatrices,multMatByNum,multMatrices,matByVec\n")
 
 current_size = 100
 

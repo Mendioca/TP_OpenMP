@@ -26,7 +26,6 @@ int main(int argc, char *argv[]) {
     auto m1 = Utils::mallocMatrix<double>(size, size);
     auto m2 = Utils::mallocMatrix<double>(size, size);
     auto v1 = Utils::mallocVector<double>(size);
-    auto v2 = Utils::mallocVector<double>(size);
 
     auto mr = Utils::mallocMatrix<double>(size, size);
     auto vr = Utils::mallocVector<double>(size);
@@ -37,52 +36,6 @@ int main(int argc, char *argv[]) {
     Utils::generateMatrix(size, size, m2);
 
     Utils::generateVector(size, v1);
-    Utils::generateVector(size, v2);
-
-    ///VECTORS///
-    double vec_autAdd_time;
-    {
-        long total_time = 0;
-        for (int i = 0; i < NBR_ITER; ++i) {
-            Timer::start();
-            VectorHandling::autoAdd_P(size, v1);
-            total_time += Timer::stop();
-        }
-        vec_autAdd_time = (double) total_time / (double) NBR_ITER;
-    }
-
-    double addVectors_time;
-    {
-        long total_time = 0;
-        for (int i = 0; i < NBR_ITER; ++i) {
-            Timer::start();
-            VectorHandling::addVectors_P(size, vr, v1, v2);
-            total_time += Timer::stop();
-        }
-        addVectors_time = (double) total_time / (double) NBR_ITER;
-    }
-
-    double multVectorByNumber_time;
-    {
-        long total_time = 0;
-        for (int i = 0; i < NBR_ITER; ++i) {
-            Timer::start();
-            VectorHandling::multVectorByNumber_P(size, vr, v1, number);
-            total_time += Timer::stop();
-        }
-        multVectorByNumber_time = (double) total_time / (double) NBR_ITER;
-    }
-
-    double scalarProduct_time;
-    {
-        long total_time = 0;
-        for (int i = 0; i < NBR_ITER; ++i) {
-            Timer::start();
-            VectorHandling::scalar_product_P(size, vr, v1);
-            total_time += Timer::stop();
-        }
-        scalarProduct_time = (double) total_time / (double) NBR_ITER;
-    }
 
     ///MATRICES///
     double mat_autAdd_time;
@@ -129,7 +82,7 @@ int main(int argc, char *argv[]) {
         multMatrices_time = (double) total_time / (double) NBR_ITER;
     }
 
-    ///MATRIX&VECTORS
+    ///MATRIX&VECTOR
     double matrixMultVector_time;
     {
         long total_time = 0;
@@ -140,15 +93,11 @@ int main(int argc, char *argv[]) {
         }
         matrixMultVector_time = (double) total_time / (double) NBR_ITER;
     }
-    
-    //size,num_threads,vec_autoAdd,addVectors,multVecByNum,scalarProduct,mat_autoAdd,addMatrices,multMatByNum,multMatrices,matByVec
-    printf("%d,%d,%f,%f,%f,%f,%f,%f,%f,%f,%f\n",
+
+    //size,num_threads,mat_autoAdd,addMatrices,multMatByNum,multMatrices,matByVec
+    printf("%d,%d,%f,%f,%f,%f,%f\n",
             size,
             num_threads,
-            vec_autAdd_time,
-            addVectors_time,
-            multVectorByNumber_time,
-            scalarProduct_time,
             mat_autAdd_time,
             addMatrices_time,
             multMatrixByNumber_time,

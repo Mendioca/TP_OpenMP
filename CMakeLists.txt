@@ -20,3 +20,4 @@ set(HEADERS
 
 add_executable(exec_char src/charMatrix.cpp ${SRC} ${HEADERS})
 add_executable(exec_numb src/numberMatrix.cpp ${SRC} ${HEADERS})
+add_executable(exec_vect src/numberVector.cpp ${SRC} ${HEADERS})
