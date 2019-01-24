@@ -5,12 +5,15 @@ program_name = sys.argv[1]
 max_threads = int(sys.argv[2])
 max_size = int(sys.argv[3])
 
+ratio = 2
+
 if "char" in program_name:
     file = open("results_char.csv", 'w')
     file.write("size,num_threads,seq_time,naive_parallel_time,smart_parallel_time,task_parallel_time\n")
 elif "vect" in program_name:
     file = open('results_vect.csv', 'w')
     file.write("size,num_threads,vec_autoAdd,addVectors,multVecByNum,scalarProduct\n")
+    ratio = 10
 else:
     file = open('results_matrix.csv', 'w')
     file.write("size,num_threads,mat_autoAdd,addMatrices,multMatByNum,multMatrices,matByVec\n")
@@ -34,6 +37,6 @@ while current_size <= max_size:
             current_num_threads += 4
         else:
             current_num_threads += 6
-    current_size *= 2
+    current_size *= ratio
 
 file.close()
